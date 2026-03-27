@@ -1,0 +1,422 @@
+/* Global Layout */
+body {
+  margin: 0;
+  background: #0c0f14;
+  color: #e5e7eb;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* HEADER */
+.hw-header {
+  background: #11151c;
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #d61f26;
+}
+
+.hw-title {
+  margin: 0;
+  font-size: 22px;
+}
+
+.hw-subtitle {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Badge */
+.hw-badge {
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.hw-badge-gray { background: #4b5563; }
+.hw-badge-green { background: #059669; }
+
+/* Content */
+.content {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+/* Cards */
+.card {
+  background: #1a1f27;
+  border: 1px solid #2c3542;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  margin: 0 0 14px 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* Inputs */
+input, select {
+  padding: 8px;
+  background: #11151c;
+  border: 1px solid #333c4a;
+  border-radius: 6px;
+  color: #fff;
+}
+
+/* Buttons */
+.primary-btn, .secondary-btn {
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+}
+
+.primary-btn {
+  background: #d61f26;
+  color: white;
+}
+
+.secondary-btn {
+  background: #4b4f58;
+  color: white;
+}
+
+.wide {
+  width: 200px;
+}
+
+/* Layout Helpers */
+.inline-label {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.inline-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-inline {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.form-actions {
+  margin-top: 10px;
+}
+
+/* Lists */
+.list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.list li {
+  padding: 10px 0;
+  border-bottom: 1px solid #2f3947;
+}
+
+/* Spinner */
+.hw-spinner-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.hw-spinner-ring {
+  width: 50px;
+  height: 50px;
+  border: 6px solid rgba(255,255,255,0.3);
+  border-top-color: #d61f26;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.hw-spinner-label {
+  margin-top: 12px;
+  text-align: center;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Toast (pop-up) ===== */
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  max-width: 420px;
+  border-radius: 8px;
+  border: 1px solid #2f3745;
+  background: #1a1f27;
+  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+  color: #e5e7eb;
+  animation: toast-in .15s ease-out;
+}
+.toast-content {
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.toast-success { border-left: 4px solid #16a34a; }
+.toast-error   { border-left: 4px solid #ef4444; }
+
+@keyframes toast-in { from { transform: translateY(6px); opacity: .0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ===== Floating bell + panel ===== */
+.history-bell {
+  position: fixed;
+  right: 24px;
+  bottom: 92px; /* leave space for the toast */
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #2f3745;
+  background: #1a1f27;
+  color: #e5e7eb;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 24px rgba(0,0,0,.25);
+  z-index: 999;
+}
+.bell-icon { font-size: 18px; }
+
+.history-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #d61f26;
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+.history-panel {
+  position: fixed;
+  right: 24px;
+  bottom: 144px; /* above bell */
+  width: 360px;
+  max-height: 50vh;
+  overflow: auto;
+  border-radius: 10px;
+  border: 1px solid #2f3745;
+  background: #0f1420;
+  color: #d5dbe3;
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  z-index: 998;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #18202b;
+  border-bottom: 1px solid #2f3745;
+  font-size: 13px;
+}
+
+.history-clear {
+  border: 1px solid #334155;
+  background: #0f1420;
+  color: #e5e7eb;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 10px 8px;
+}
+.history-list li {
+  padding: 8px;
+  border-bottom: 1px dashed #2a3344;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.history-op   { color: #93c5fd; }  /* operation */
+.history-id   { color: #a7f3d0; }  /* trackID */
+.history-ok   { color: #34d399; }  /* completed */
+.history-fail { color: #f87171; }  /* failed */
+.history-time { color: #9aa4b2; font-size: 12px; }
+
+/* Two buttons side-by-side (inherits your .form-inline look) */
+.two-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+/* Grid for loadable files: max 5 per row, wrap below */
+.lf-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)); /* exactly 5 columns */
+  gap: 0.75rem;
+}
+
+/* Card look for each file item */
+.lf-item {
+  border: 1px solid #e1e3e6;
+  border-radius: 6px;
+  padding: 0.6rem 0.7rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 72px;
+}
+
+/* Title and meta */
+.lf-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.lf-meta {
+  font-size: 0.85rem;
+  color: #5c6670;
+  line-height: 1.2rem;
+  word-break: break-word;
+}
+
+/* Optional: “no results” placeholder */
+.lf-empty {
+  grid-column: 1 / -1; /* span full row */
+  color: #5c6670;
+  font-style: italic;
+}
+
+/* Make it responsive (<= 900px → 3 per row; <= 600px → 2 per row) */
+@media (max-width: 900px) {
+  .lf-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .lf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* --- Readability: make card text black --- */
+.lf-item { 
+  color: #000;                 /* ensure default text is black */
+}
+.lf-title { 
+  color: #000;                 /* title clearly black */
+}
+.lf-meta { 
+  color: #111;                 /* darker than #5c6670 for readability */
+}
+
+/* Some frameworks style small <small>/muted; force to black too */
+.lf-item small,
+.lf-item .muted { 
+  color: #000 !important;
+}
+
+/* --- Selectable card states --- */
+.lf-item {
+  position: relative;
+  cursor: pointer;
+  border: 1px solid #cfd3d7;
+  transition: box-shadow .15s ease, border-color .15s ease, transform .02s ease-in;
+}
+.lf-item:hover {
+  border-color: #7a869a;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.lf-item.selected {
+  border-color: #0f62fe;                  /* blue border when selected */
+  box-shadow: 0 0 0 2px rgba(15,98,254,.2);
+  background: #f0f6ff;
+}
+
+/* Optional checkmark badge in top-right when selected */
+.lf-item.selected::after {
+  content: "✓";
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: #0f62fe;
+  color: #fff;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+}
+
+/* Checkbox styling if you choose to show a visible checkbox in each card */
+.lf-pick {
+  margin-top: .5rem;
+  font-size: .9rem;
+}
+.lf-pick input[type="checkbox"] {
+  transform: translateY(1px);
+}
+
+/* --- Readability for file/target cards --- */
+.lf-item, .tgt-card { color:#000; }
+.lf-title { color:#000; }
+.lf-meta { color:#111; }
+
+/* Grid for loadable files: max 5 per row (you already added .lf-grid) */
+.lf-grid {
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0, 1fr));
+  gap:0.75rem;
+}
+
+/* Grid for targets: also max 5 per row */
+.tgt-grid {
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0, 1fr));
+  gap:0.75rem;
+  margin-top:.25rem;
+}
+
+/* Target card */
+.tgt-card {
+  position:relative;
+  border:1px solid #cfd3d7;
+  border-radius:6px;
+  background:#fff;
+  padding:.6rem .7rem;
+  cursor:pointer;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.tgt-card:hover { border-color:#7a869a; box-shadow:0 2px 8px rgba(0,0,0,.12); }
+.tgt-card.selected { border-color:#0f62fe; box-shadow:0 0 0 2px rgba(15,98,254,.2); background:#f0f6ff; }
+.tgt-card.selected::after {
+  content:"✓"; position:absolute; top:6px; right:8px; width:18px; height:18px;
+  background:#0f62fe; color:#fff; border-radius:50%; font-size:12px; line-height:18px; text-align:center;
+}
+
+/* Status after Config Check / Load */
+.tgt-card.ok { border-color:#1e8e3e; background:#f2fcf5; }
+.tgt-card.fail { border-color:#d93025; background:#fff6f6; }
+.tgt-status { font-weight:600; margin-top:.25rem; }
+.tgt-msg { font-size:.9rem; color:#333; margin-top:.15rem; }
+
+/* Placeholder when there are no targets yet */
+.tgt-placeholder { color:#5c6670; font-style:italic; }
+
+/* Responsive fallbacks */
+@media (max-width:900px){ .lf-grid, .tgt-grid { grid-template-columns:repeat(3, minmax(0, 1fr)); } }
+@media (max-width:600px){ .lf-grid, .tgt-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
