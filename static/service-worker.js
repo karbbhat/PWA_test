@@ -3,9 +3,9 @@ const CACHE_NAME = "adg-pwa-v3";
 // IMPORTANT: only files that 100% exist
 const ASSETS = [
   "./",                     // page entry
+  "./manifest.json",
   "./static/styles.css",
   "./static/app.js",
-  "./static/manifest.json",
   "./static/icons/icon-192.png",
   "./static/icons/icon-512.png"
 ];
