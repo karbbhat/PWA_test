@@ -1,10 +1,10 @@
 const CACHE_NAME = "adg-pwa-v1";
 
 const ASSETS = [
-  "/",
-  "/static/app.js",
-  "/static/styles.css",
-  "/manifest.json"
+  "./",
+  "./static/app.js",
+  "./static/styles.css",
+  "./manifest.json"
 ];
 
 self.addEventListener("install", event => {
