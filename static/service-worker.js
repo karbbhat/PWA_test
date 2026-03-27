@@ -5,10 +5,10 @@ const ASSETS = [
   "../",                     // page entry
   "../index.html",
   "../manifest.json",
-  "./static/styles.css",
-  "./static/app.js",
-  "./static/icons/icon-192.png",
-  "./static/icons/icon-512.png"
+  "./styles.css",
+  "./app.js",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
