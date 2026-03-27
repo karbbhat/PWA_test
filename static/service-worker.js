@@ -2,12 +2,13 @@ const CACHE_NAME = "adg-pwa-v3";
 
 // IMPORTANT: only files that 100% exist
 const ASSETS = [
-  "./",                     // page entry
-  "./manifest.json",
-  "./static/styles.css",
-  "./static/app.js",
-  "./static/icons/icon-192.png",
-  "./static/icons/icon-512.png"
+  "../",                     // page entry
+  "../index.html",
+  "../manifest.json",
+  "../static/styles.css",
+  "../static/app.js",
+  "../static/icons/icon-192.png",
+  "../static/icons/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
