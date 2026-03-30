@@ -1,164 +1,131 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <title>Honeywell ADG400 EPIC Loader</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="stylesheet" href="./static/styles.css"/>
-  <link rel="manifest" href="./manifest.json"/>
-  <meta name="theme-color" content="#d61f26"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Headless Controller</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 600px; margin: 20px auto; padding: 0 10px; }
+        button { padding: 8px 12px; margin-top: 5px; cursor: pointer; }
+        .panel { border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        pre { background: #f4f4f4; padding: 10px; overflow-x: auto; }
+        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;}
+        .idle { background: #e0e0e0; }
+        .inprogress { background: #fff3cd; color: #856404; }
+        .completed { background: #d4edda; color: #155724; }
+    </style>
+    <link rel="manifest" href="manifest.json">
 </head>
-
 <body>
-
-  <!-- HEADER -->
-  <header class="hw-header">
-    <div>
-      <h1 class="hw-title">ADG400 EPIC Loader</h1>
-      <div class="hw-subtitle">Secure Data Loading • HTTPS + 2‑Way SSL</div>
+    <h2>Server Controller</h2>
+ 
+    <div class="panel">
+        <button onclick="apiCall('GET', '/api/status')">Check Server Status</button>
+        <button onclick="apiCall('GET', '/api/files')">List Available Files</button>
     </div>
-    <span id="status-badge" class="hw-badge hw-badge-gray">mTLS not set</span>
-  </header>
-
-  <!-- SPINNER -->
-  <div id="spinner" class="hw-spinner-overlay" aria-hidden="true">
-    <div class="hw-spinner-container">
-      <div class="hw-spinner-ring"></div>
-      <div id="spinner-label" class="hw-spinner-label">Processing…</div>
+ 
+    <div class="panel">
+        <h3>Upload File</h3>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Upload to Server</button>
     </div>
-  </div>
+ 
+    <div class="panel">
+        <h3>Load File to External System</h3>
+        <input type="text" id="filenameInput" placeholder="Enter filename (e.g. config.json)">
+        <button onclick="loadFile()">Trigger Load</button>
+        
+        <p>Current Load Status: <span id="statusBadge" class="status-badge idle">idle</span></p>
+    </div>
+ 
+    <pre id="output">System Ready...</pre>
+    
+    <div class="panel" style="font-size: 0.9em; color: #666;">
+        <p>First time here? <a href="../client.p12" download>Download Client Certificate</a> (Password: test)</p>
+    </div>
 
-  <main class="content">
-
-    <!-- CONFIG AREA -->
-    <section class="card">
-      <h2 class="card-title">Configuration</h2>
-
-      <form id="config-form" class="form-inline">
-        <label class="inline-label">
-          <span>ADG Host</span>
-          <input id="cfg-host" required placeholder="adg400.honeywell.com"/>
-        </label>
-
-        <label class="inline-label">
-          <span>SSL Mode</span>
-          <select id="cfg-ssl">
-            <option value="2way" selected>2‑Way SSL</option>
-            <option value="1way">1‑Way SSL</option>
-          </select>
-        </label>
-
-        <button type="submit" class="primary-btn">Apply</button>
-      </form>
-    </section>
-
-    <!-- STAGE -->
-    <section class="card">
-      <h2 class="card-title">1 — Stage File (WDLS‑LOCAL)</h2>
-
-      <form id="stage-form" enctype="multipart/form-data" class="form-inline">
-        <label class="inline-label">
-          <span>Select File (.dr / .zip)</span>
-          <input type="file" name="file" required/>
-        </label>
-        <button type="submit" class="primary-btn" id="stage-btn" disabled>Stage</button>
-      </form>
-    </section>
-
-    <!-- LOADABLE + LOAD ATTRIBUTES (combined) -->
-<section class="card" id="files-attrs-card">
-  <h2 class="card-title">2 — Loadable Files & Attributes (EPIC · ADG Storage)</h2>
-
-  <!-- Button row -->
-  <div class="form-inline two-actions">
-    <button id="btn-loadable-files" class="primary-btn" disabled>Get Loadable Files</button>
-    <button id="btn-load-attributes" class="secondary-btn" disabled>Get Load Attributes</button>
-  </div>
-
-  <!-- Results live here (same box) -->
-  <div id="loadable-files-grid" class="lf-grid"></div>
-
-  <!-- (Optional) file selection panel can stay if you still need it elsewhere -->
-  <!-- <div id="file-select-panel" class="list padded"></div> -->
-
-  <!-- Targets from Load Attributes (kept, but rendered in same card if you prefer) -->
-  <div id="targets-panel" class="list padded" style="margin-top: 0.75rem;"></div>
-</section>
-
-<!-- 3 — CONFIG CHECK (Targets render here) -->
-<section class="card" id="config-card">
-  <h2 class="card-title">3 — Config Check</h2>
-
-  <div class="form-inline two-actions">
-    <label class="inline-label" style="margin-right:.75rem;">
-      <span>Passcode</span>
-      <input id="passcode" placeholder="optional"/>
-    </label>
-
-    <!-- Full Load beside Config Check -->
-    <label class="inline-checkbox" style="margin-right:.75rem;">
-      <input id="full-load" type="checkbox"> Full Load
-    </label>
-
-    <button id="btn-config-check" class="secondary-btn" disabled>Run Config Check</button>
-  </div>
-
-  <!-- Targets grid lives here (unique id) -->
-  <div id="config-targets-panel">
-    <div class="tgt-placeholder">No targets loaded yet.</div>
-  </div>
-</section>
-
-<!-- 4 — LOAD (separate from Config Check) -->
-<section class="card" id="load-card">
-  <h2 class="card-title">4 — Load</h2>
-  <div class="form-actions" style="margin-bottom:.75rem;">
-    <button id="btn-load" class="primary-btn wide" disabled>Start Load</button>
-  </div>
-  <!-- NEW: load targets/status grid lives here -->
-  <div id="load-targets-panel">
-    <div class="tgt-placeholder">No load results yet.</div>
-  </div>
-</section>
-
-<!-- (unchanged) Config Check Results -->
-<section class="card">
-  <h2 class="card-title">Config Check Results</h2>
-  <div id="config-results" class="list padded">No results yet.</div>
-</section>
-
-<!-- (unchanged) Load Results -->
-<section class="card">
-  <h2 class="card-title">Load Results</h2>
-  <div id="load-results" class="list padded">No results yet.</div>
-</section>
-
-  </main>
-  <!-- Toast (pop-up) -->
-<div id="toast" class="toast" aria-live="polite" aria-atomic="true" style="display:none;">
-  <div id="toast-content" class="toast-content"></div>
-</div>
-
-<!-- Floating bell + history panel -->
-<button id="history-bell" class="history-bell" aria-label="Open history">
-  <span class="bell-icon">🔔</span>
-  <span id="history-badge" class="history-badge" hidden>0</span>
-</button>
-
-<div id="history-panel" class="history-panel" hidden>
-  <div class="history-header">
-    <span>Recent Commands (last 10)</span>
-    <button id="history-clear" class="history-clear" title="Clear history">Clear</button>
-  </div>
-  <ul id="history-list" class="history-list"></ul>
-</div>
-  <script src="./static/app.js"></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("./service-worker.js");
-    }
-  </script>
-
-
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker Registered!', reg.scope))
+                    .catch(err => console.error('Service Worker Registration Failed!', err));
+            });
+        }
+        
+        const API_BASE = 'https://localhost:4443';
+        const output = document.getElementById('output');
+        const statusBadge = document.getElementById('statusBadge');
+        let pollTimer = null;
+ 
+        function log(data) {
+            output.innerText = JSON.stringify(data, null, 2);
+        }
+ 
+        async function apiCall(method, endpoint, body = null, headers = {}) {
+            try {
+                const config = {
+                    method: method,
+                    credentials: 'include', // Mandates sending the mTLS certificate
+                    headers: headers
+                };
+                if (body) config.body = body;
+ 
+                const response = await fetch(`${API_BASE}${endpoint}`, config);
+                const data = await response.json();
+                log(data);
+                return data;
+            } catch (err) {
+                log({ error: err.message, note: "Check if server is running and cert is accepted." });
+            }
+        }
+ 
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) return alert("Select a file first!");
+            const file = fileInput.files[0];
+            
+            // Send the raw file directly in the body, put name in header
+            await apiCall('POST', '/api/upload', file, {
+                'X-File-Name': file.name,
+                'Content-Type': 'application/octet-stream'
+            });
+        }
+ 
+        async function loadFile() {
+            const filename = document.getElementById('filenameInput').value;
+            if (!filename) return alert("Enter a filename to load.");
+            
+            const res = await apiCall('POST', '/api/load', JSON.stringify({ filename }), {
+                'Content-Type': 'application/json'
+            });
+ 
+            if (res && res.status === 'inprogress') {
+                startPolling();
+            }
+        }
+ 
+        function updateBadge(status) {
+            statusBadge.innerText = status;
+            statusBadge.className = `status-badge ${status}`;
+        }
+ 
+        async function startPolling() {
+            if (pollTimer) clearTimeout(pollTimer);
+            
+            const res = await apiCall('GET', '/api/poll');
+            if (res && res.load_status) {
+                updateBadge(res.load_status);
+                
+                // If it is still in progress, poll again in 2 seconds
+                if (res.load_status === 'inprogress') {
+                    pollTimer = setTimeout(startPolling, 2000);
+                } else if (res.load_status === 'completed') {
+                    // Reset server status to idle after completion so we can run it again
+                    setTimeout(() => updateBadge('idle'), 5000);
+                }
+            }
+        }
+    </script>
 </body>
 </html>
